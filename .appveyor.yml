@@ -1,0 +1,44 @@
+version: build-{build}
+configuration: Release
+
+environment:
+  matrix:
+  - job_name: macOS
+    appveyor_build_worker_image: macos
+    INSTALL_DIR: lite-xl-$(APPVEYOR_REPO_TAG_NAME)-macos
+
+for:
+- matrix:
+    only:
+    - job_name: macOS
+  init:
+  - system_profiler SPSoftwareDataType
+  - gcc -v
+  - xcodebuild -version
+  install:
+  - chmod +x ${APPVEYOR_BUILD_FOLDER}/scripts/appveyor/install.sh
+  - ${APPVEYOR_BUILD_FOLDER}/scripts/appveyor/install.sh
+  before_build:
+  - chmod +x ${APPVEYOR_BUILD_FOLDER}/scripts/appveyor/before_build.sh
+  - ${APPVEYOR_BUILD_FOLDER}/scripts/appveyor/before_build.sh
+  build_script:
+  - chmod +x ${APPVEYOR_BUILD_FOLDER}/scripts/appveyor/build.sh
+  - ${APPVEYOR_BUILD_FOLDER}/scripts/appveyor/build.sh
+  after_build:
+  - chmod +x ${APPVEYOR_BUILD_FOLDER}/scripts/appveyor/after_build.sh
+  - ${APPVEYOR_BUILD_FOLDER}/scripts/appveyor/after_build.sh
+  test: off
+  artifacts:
+  - name: macOS DMG
+    path: "lite-xl-*.dmg"
+
+deploy:
+- provider: GitHub
+  auth_token:
+    secure: tLA00Q1sedyGxYAY9m8ZO//dMJ/HLQ5v8pFWSfUqKMcssQSa3zjQaoAWisKQsvYf
+  artifact: macOS DMG
+  draft: false
+  prerelease: false
+  force_update: true
+  on:
+    APPVEYOR_REPO_TAG: true
