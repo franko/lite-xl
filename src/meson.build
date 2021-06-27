@@ -17,7 +17,7 @@ if host_machine.system() == 'darwin'
     lite_sources += 'bundle_open.m'
 endif
 
-executable('lite',
+executable('lite-xl',
     lite_sources + lite_rc,
     include_directories: [lite_include, font_renderer_include],
     dependencies: lite_deps,
