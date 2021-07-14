@@ -4,7 +4,7 @@
 #define MyAppURL       "https://lite-xl.github.io"
 #define MyAppExeName   "lite-xl.exe"
 #define BuildDir       "@PROJECT_BUILD_DIR@"
-#define SourceDir      "."
+#define SourceDir      "@PROJECT_SOURCE_DIR@"
 
 ; Use /dArch option to create a setup for a different architecture, e.g.:
 ; iscc /dArch=x86 innosetup.iss
@@ -34,7 +34,7 @@ ArchitecturesInstallIn64BitMode={#Arch}
 AllowNoIcons=yes
 Compression=lzma
 SolidCompression=yes
-DefaultDirName={autopf}\{#MyAppName}
+DefaultDirName={autopf}/{#MyAppName}
 DefaultGroupName={#MyAppPublisher}
 UninstallFilesDir={app}
 
@@ -52,10 +52,10 @@ OutputBaseFilename=LiteXL-{#MyAppVersion}-{#Arch}-setup
 ;DisableDirPage=yes
 ;DisableProgramGroupPage=yes
 
-LicenseFile={#SourceDir}\LICENSE
-SetupIconFile={#SourceDir}\icon.ico
-WizardImageFile="wizard-modern-image.bmp"
-WizardSmallImageFile="litexl-55px.bmp"
+LicenseFile={#SourceDir}/LICENSE
+SetupIconFile={#SourceDir}/resources/icons/icon.ico
+WizardImageFile="{#SourceDir}/scripts/innosetup/wizard-modern-image.bmp"
+WizardSmallImageFile="{#SourceDir}/scripts/innosetup/litexl-55px.bmp"
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -66,18 +66,18 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 Name: "portablemode"; Description: "Portable Mode"; Flags: unchecked
 
 [Files]
-Source: "{#BuildDir}\lite-xl.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#BuildDir}\data\*"; DestDir: "{app}\data"; Flags: ignoreversion recursesubdirs
+Source: "{#BuildDir}/src/lite-xl.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#SourceDir}/data/*"; DestDir: "{app}/data"; Flags: ignoreversion recursesubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Check: not IsTaskSelected('portablemode')
-Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"; Check: not IsTaskSelected('portablemode')
+Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Check: not WizardIsTaskSelected('portablemode')
+Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"; Check: not WizardIsTaskSelected('portablemode')
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
-Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: quicklaunchicon; Check: not IsTaskSelected('portablemode')
+Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: quicklaunchicon; Check: not WizardIsTaskSelected('portablemode')
 
 [Run]
-Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}/{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
 [Setup]
-Uninstallable=not IsTaskSelected('portablemode')
+Uninstallable=not WizardIsTaskSelected('portablemode')
