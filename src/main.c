@@ -150,7 +150,7 @@ init_lua:
     lua_pushstring(L, argv[i]);
     lua_rawseti(L, -2, i + 1);
   }
-  lua_setglobal(L, "ARGS");
+  lua_setglobal(L, "ARGV");
 
   lua_pushstring(L, SDL_GetPlatform());
   lua_setglobal(L, "PLATFORM");
@@ -174,10 +174,11 @@ init_lua:
     "  HOME = os.getenv('" LITE_OS_HOME "')\n"
     "  local exedir = EXEFILE:match(\"^(.*)" LITE_PATHSEP_PATTERN LITE_NONPATHSEP_PATTERN "$\")\n"
     "  local prefix = exedir:match(\"^(.*)" LITE_PATHSEP_PATTERN "bin$\")\n"
-    "  dofile((MACOS_RESOURCES or (prefix and prefix .. '/share/lite-xl' or exedir .. '/data')) .. '/core/start.lua')\n"
-    "  core = require('core')\n"
-    "  core.init()\n"
-    "  core.run()\n"
+    "  core = dofile((MACOS_RESOURCES or (prefix and prefix .. '/share/lite-xl' or exedir .. '/data')) .. '/core/start.lua')\n"
+    "  if core then\n"
+    "    core.init()\n"
+    "    core.run()\n"
+    "  end\n"
     "end, function(err)\n"
     "  local error_dir\n"
     "  io.stdout:write('Error: '..tostring(err)..'\\n')\n"

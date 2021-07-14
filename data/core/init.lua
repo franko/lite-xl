@@ -423,7 +423,7 @@ local function reload_on_user_module_save()
 end
 
 
-function core.init()
+function core.init(options)
   command = require "core.command"
   keymap = require "core.keymap"
   RootView = require "core.rootview"
