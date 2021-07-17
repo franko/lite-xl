@@ -1,8 +1,9 @@
-project('lite-xl', 'c', 'cpp', default_options : ['c_std=gnu11', 'cpp_std=c++03'])
+project('lite-xl', 'c', 'cpp', version : '2.0.0', default_options : ['c_std=gnu11', 'cpp_std=c++03'])
 
-version = get_option('version')
 conf_data = configuration_data()
-conf_data.set('PROJECT_VERSION', version)
+conf_data.set('PROJECT_BUILD_DIR', meson.current_build_dir())
+conf_data.set('PROJECT_SOURCE_DIR', meson.current_source_dir())
+conf_data.set('PROJECT_VERSION', meson.project_version())
 
 if host_machine.system() == 'darwin'
     add_languages('objc')
